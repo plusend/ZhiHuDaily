@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +20,9 @@ import com.plusend.zhihudaily.model.bean.LatestNews;
 import com.plusend.zhihudaily.mvp.presenter.LatestNewsPresenter;
 import com.plusend.zhihudaily.mvp.presenter.Presenter;
 import com.plusend.zhihudaily.mvp.view.LatestNewsView;
+import com.plusend.zhihudaily.ui.adapter.BannerAdapter;
 import com.plusend.zhihudaily.ui.adapter.StoryAdapter;
+import com.plusend.zhihudaily.ui.view.RecyclerViewHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,13 @@ public class MainActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @BindView(R.id.srl_main)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.rv_main_header)
+    RecyclerViewHeader mRecyclerViewHeader;
+    @BindView(R.id.vp_main)
+    ViewPager mViewPager;
+
+    private BannerAdapter mBannerAdapter;
+    private List<LatestNews.TopStories> mTopStories = new ArrayList<>();
 
     private Presenter mPresenter;
 
@@ -48,6 +58,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,6 +79,10 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mStoryAdapter);
 
+        mRecyclerViewHeader.attachTo(mRecyclerView);
+
+        mBannerAdapter = new BannerAdapter(getSupportFragmentManager(), mTopStories);
+        mViewPager.setAdapter(mBannerAdapter);
         setSwipeRefreshLayoutListener();
     }
 
@@ -152,6 +167,10 @@ public class MainActivity extends AppCompatActivity
     public void showNews(LatestNews news) {
         mStoriesList.addAll(news.getStories());
         mStoryAdapter.notifyDataSetChanged();
+
+        mTopStories.clear();
+        mTopStories.addAll(news.getTopStories());
+        mBannerAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
