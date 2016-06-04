@@ -1,6 +1,7 @@
 package com.plusend.zhihudaily.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.plusend.zhihudaily.R;
 import com.plusend.zhihudaily.model.bean.LatestNews;
@@ -78,12 +80,34 @@ public class MainActivity extends AppCompatActivity
         mStoryAdapter = new StoryAdapter(this, mStoriesList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mStoryAdapter);
+        mStoryAdapter.setOnItemClickListener(new StoryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ArrayList<Integer> mIds = new ArrayList<>();
+                int size = mStoriesList.size();
+                for(int i = 0; i < size; ++i){
+                    LatestNews.Stories story = mStoriesList.get(i);
+                    mIds.add(story.getId());
+                }
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putIntegerArrayListExtra("id", mIds);
+                intent.putExtra("current", position);
+                startActivity(intent);
+            }
+        });
 
         mRecyclerViewHeader.attachTo(mRecyclerView);
 
         mBannerAdapter = new BannerAdapter(getSupportFragmentManager(), mTopStories);
         mViewPager.setAdapter(mBannerAdapter);
         setSwipeRefreshLayoutListener();
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                mPresenter.start();
+            }
+        });
     }
 
     private void setSwipeRefreshLayoutListener() {

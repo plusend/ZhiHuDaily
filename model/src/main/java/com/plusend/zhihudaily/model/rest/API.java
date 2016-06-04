@@ -26,7 +26,7 @@ public interface API {
     Observable<StartImage> getStartImage();
 
     @GET("news/{id}")
-    Observable<DetailNews> getDetailNews(@Path("id") String id);
+    Observable<DetailNews> getDetailNews(@Path("id") int id);
 
     @GET("news/before/{date}")
     Observable<BeforeNews> getBeforeNews(@Path("date") String date);

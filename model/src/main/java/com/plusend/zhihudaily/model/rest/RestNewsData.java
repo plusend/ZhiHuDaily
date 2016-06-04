@@ -80,9 +80,10 @@ public class RestNewsData implements NewsData {
     }
 
     @Override
-    public void getDetailNews(String id) {
+    public void getDetailNews(int id) {
         mAPI.getDetailNews(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<DetailNews>() {
                     @Override
                     public void onCompleted() {

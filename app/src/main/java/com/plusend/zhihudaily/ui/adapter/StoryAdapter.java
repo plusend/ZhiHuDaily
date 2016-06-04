@@ -36,6 +36,16 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         mStoriesList = StoriesList;
     }
 
+    private OnItemClickListener mOnItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == NORMAL) {
@@ -73,7 +83,7 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mStoriesList.size();
     }
 
-    public static class DateHolder extends RecyclerView.ViewHolder {
+    public class DateHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.date)
         TextView date;
@@ -85,10 +95,20 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public DateHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mOnItemClickListener != null){
+                        mOnItemClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
         }
+
     }
 
-    public static class NormalHolder extends RecyclerView.ViewHolder {
+    public class NormalHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.title)
         TextView title;
@@ -98,6 +118,15 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public NormalHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mOnItemClickListener != null){
+                        mOnItemClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }

@@ -9,7 +9,7 @@ public interface NewsData {
 
     void getStartImage();
 
-    void getDetailNews(String id);
+    void getDetailNews(int id);
 
     /**
      * 若果需要查询 11 月 18 日的消息，before 后的数字应为 20131119
