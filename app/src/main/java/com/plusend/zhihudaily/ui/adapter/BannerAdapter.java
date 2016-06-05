@@ -30,4 +30,5 @@ public class BannerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return mTopStories.size();
     }
+
 }

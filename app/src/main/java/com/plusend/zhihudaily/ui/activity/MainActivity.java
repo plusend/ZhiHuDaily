@@ -16,7 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.plusend.zhihudaily.R;
 import com.plusend.zhihudaily.model.bean.BeforeNews;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     RecyclerViewHeader mRecyclerViewHeader;
     @BindView(R.id.vp_main)
     ViewPager mViewPager;
+    @BindView(R.id.indicator)
+    LinearLayout indicator;
 
     private BannerAdapter mBannerAdapter;
     private List<LatestNews.TopStories> mTopStories = new ArrayList<>();
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity
     private BeforeNewsPresenter mBeforePresenter;
     private String mBeforeDate;
     private boolean isLoading = false;
+
+    private int preDotPosition = 0;
 
     private List<Story> mStoriesList = new ArrayList<>();
     StoryAdapter mStoryAdapter;
@@ -127,6 +133,45 @@ public class MainActivity extends AppCompatActivity
 
         mBannerAdapter = new BannerAdapter(getSupportFragmentManager(), mTopStories);
         mViewPager.setAdapter(mBannerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // 取余后的索引，得到新的page的索引
+                int newPosition = position % mTopStories.size();
+                // 把上一个点设置为被选中
+                indicator.getChildAt(preDotPosition).setEnabled(false);
+                // 根据索引设置那个点被选中
+                indicator.getChildAt(newPosition).setEnabled(true);
+                // 新索引赋值给上一个索引的位置
+                preDotPosition = newPosition;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mViewPager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "banner onClick");
+                ArrayList<Integer> mIds = new ArrayList<>();
+                int size = mTopStories.size();
+                for (int i = 0; i < size; ++i) {
+                    LatestNews.TopStories story = mTopStories.get(i);
+                    mIds.add(story.getId());
+                }
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putIntegerArrayListExtra("id", mIds);
+                intent.putExtra("current", mViewPager.getCurrentItem());
+                startActivity(intent);
+            }
+        });
         setSwipeRefreshLayoutListener();
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
@@ -224,6 +269,22 @@ public class MainActivity extends AppCompatActivity
 
         mTopStories.clear();
         mTopStories.addAll(news.getTopStories());
+
+        View dot;
+        LinearLayout.LayoutParams params;
+        indicator.removeAllViews();
+        for (int i = 0; i < news.getTopStories().size(); ++i) {
+            // 每循环一次添加一个点到线行布局中
+            dot = new View(this);
+            dot.setBackgroundResource(R.drawable.dot_bg_selector);
+            params = new LinearLayout.LayoutParams(20, 20);
+            params.leftMargin = 10;
+            dot.setEnabled(false);
+            dot.setLayoutParams(params);
+            indicator.addView(dot); // 向线性布局中添加"点"
+        }
+        indicator.getChildAt(preDotPosition).setEnabled(true);
+
         mBannerAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
     }
@@ -237,4 +298,9 @@ public class MainActivity extends AppCompatActivity
         isLoading = false;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        return mViewPager.onTouchEvent(event);
+    }
 }

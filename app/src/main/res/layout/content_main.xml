@@ -16,7 +16,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_main"
@@ -33,6 +34,16 @@
                     android:id="@+id/vp_main"
                     android:layout_width="match_parent"
                     android:layout_height="230dp"/>
+
+                <LinearLayout
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/vp_main"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="15dip"/>
 
             </com.plusend.zhihudaily.ui.view.RecyclerViewHeader>
 

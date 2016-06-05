@@ -20,6 +20,11 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"/>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/header_shadow"/>
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
