@@ -1,5 +1,6 @@
 package com.plusend.zhihudaily.mvp.view;
 
+import com.plusend.zhihudaily.model.bean.BeforeNews;
 import com.plusend.zhihudaily.model.bean.LatestNews;
 
 /**
@@ -9,4 +10,5 @@ public interface LatestNewsView extends NewsView{
 
     void showNews(LatestNews news);
 
+    void addBefore(BeforeNews news);
 }

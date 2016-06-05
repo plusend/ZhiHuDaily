@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plusend.zhihudaily.R;
-import com.plusend.zhihudaily.model.bean.LatestNews;
+import com.plusend.zhihudaily.model.bean.Story;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,12 +25,12 @@ public class StoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private Context mContext;
     private LayoutInflater mLayoutInflater;
-    private List<LatestNews.Stories> mStoriesList = new ArrayList<>();
+    private List<Story> mStoriesList = new ArrayList<>();
 
     private static final int DATE = 1;
     private static final int NORMAL = 2;
 
-    public StoryAdapter(Context context, List<LatestNews.Stories> StoriesList) {
+    public StoryAdapter(Context context, List<Story> StoriesList) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mStoriesList = StoriesList;

@@ -12,7 +12,7 @@ public class BeforeNews {
     @SerializedName("date")
     private String date;
     @SerializedName("stories")
-    private List<Stories> stories;
+    private List<Story> stories;
 
     public String getDate() {
         return date;
@@ -22,11 +22,11 @@ public class BeforeNews {
         this.date = date;
     }
 
-    public List<Stories> getStories() {
+    public List<Story> getStories() {
         return stories;
     }
 
-    public void setStories(List<Stories> stories) {
+    public void setStories(List<Story> stories) {
         this.stories = stories;
     }
 

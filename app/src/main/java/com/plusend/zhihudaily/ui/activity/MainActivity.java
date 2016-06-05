@@ -13,12 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.plusend.zhihudaily.R;
+import com.plusend.zhihudaily.model.bean.BeforeNews;
 import com.plusend.zhihudaily.model.bean.LatestNews;
+import com.plusend.zhihudaily.model.bean.Story;
+import com.plusend.zhihudaily.mvp.presenter.BeforeNewsPresenter;
 import com.plusend.zhihudaily.mvp.presenter.LatestNewsPresenter;
 import com.plusend.zhihudaily.mvp.presenter.Presenter;
 import com.plusend.zhihudaily.mvp.view.LatestNewsView;
@@ -50,8 +54,11 @@ public class MainActivity extends AppCompatActivity
     private List<LatestNews.TopStories> mTopStories = new ArrayList<>();
 
     private Presenter mPresenter;
+    private BeforeNewsPresenter mBeforePresenter;
+    private String mBeforeDate;
+    private boolean isLoading = false;
 
-    private List<LatestNews.Stories> mStoriesList = new ArrayList<>();
+    private List<Story> mStoriesList = new ArrayList<>();
     StoryAdapter mStoryAdapter;
 
     @Override
@@ -76,6 +83,7 @@ public class MainActivity extends AppCompatActivity
 
 
         mPresenter = new LatestNewsPresenter(this);
+        mBeforePresenter = new BeforeNewsPresenter(this);
 
         mStoryAdapter = new StoryAdapter(this, mStoriesList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -85,8 +93,8 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(View view, int position) {
                 ArrayList<Integer> mIds = new ArrayList<>();
                 int size = mStoriesList.size();
-                for(int i = 0; i < size; ++i){
-                    LatestNews.Stories story = mStoriesList.get(i);
+                for (int i = 0; i < size; ++i) {
+                    Story story = mStoriesList.get(i);
                     mIds.add(story.getId());
                 }
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
@@ -97,6 +105,25 @@ public class MainActivity extends AppCompatActivity
         });
 
         mRecyclerViewHeader.attachTo(mRecyclerView);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisibleItemPosition = ((LinearLayoutManager) layoutManager)
+                        .findLastVisibleItemPosition();
+                if ((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
+                        (lastVisibleItemPosition) >= totalItemCount - 1)) {
+                    Log.d(TAG, "loadMore: " + mBeforeDate);
+                    if (!isLoading) {
+                        isLoading = true;
+                        mBeforePresenter.getBeforeNews(mBeforeDate);
+                    }
+                }
+            }
+        });
 
         mBannerAdapter = new BannerAdapter(getSupportFragmentManager(), mTopStories);
         mViewPager.setAdapter(mBannerAdapter);
@@ -189,6 +216,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showNews(LatestNews news) {
+        mBeforeDate = news.getDate();
+        Log.d(TAG, "showNews: " + mBeforeDate);
+        mStoriesList.clear();
         mStoriesList.addAll(news.getStories());
         mStoryAdapter.notifyDataSetChanged();
 
@@ -196,6 +226,15 @@ public class MainActivity extends AppCompatActivity
         mTopStories.addAll(news.getTopStories());
         mBannerAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void addBefore(BeforeNews news) {
+        mBeforeDate = news.getDate();
+        Log.d(TAG, "addBefore: " + mBeforeDate);
+        mStoriesList.addAll(news.getStories());
+        mStoryAdapter.notifyDataSetChanged();
+        isLoading = false;
     }
 
 }

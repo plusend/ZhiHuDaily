@@ -1,5 +1,7 @@
 package com.plusend.zhihudaily.model.rest;
 
+import android.util.Log;
+
 import com.plusend.zhihudaily.common.Constants;
 import com.plusend.zhihudaily.common.RxBus;
 import com.plusend.zhihudaily.model.NewsData;
@@ -25,6 +27,7 @@ import rx.schedulers.Schedulers;
  */
 public class RestNewsData implements NewsData {
 
+    private static final String TAG = "RestNewsData";
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.API_HOST)
             .addConverterFactory(GsonConverterFactory.create())
@@ -61,6 +64,7 @@ public class RestNewsData implements NewsData {
     public void getStartImage() {
         mAPI.getStartImage()
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StartImage>() {
                     @Override
                     public void onCompleted() {
@@ -106,6 +110,7 @@ public class RestNewsData implements NewsData {
     public void getBeforeNews(String date) {
         mAPI.getBeforeNews(date)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<BeforeNews>() {
                     @Override
                     public void onCompleted() {
@@ -119,6 +124,8 @@ public class RestNewsData implements NewsData {
 
                     @Override
                     public void onNext(BeforeNews beforeNews) {
+                        Log.d(TAG, "getBeforeNews: " + beforeNews.getDate());
+                        beforeNews.getStories().get(0).setType(Integer.valueOf(beforeNews.getDate()));
                         RxBus.getInstance().send(beforeNews);
                     }
                 });
@@ -128,6 +135,7 @@ public class RestNewsData implements NewsData {
     public void getStoryExtra(String id) {
         mAPI.getStoryExtra(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StoryExtra>() {
                     @Override
                     public void onCompleted() {
@@ -150,6 +158,7 @@ public class RestNewsData implements NewsData {
     public void getLongComments(String id) {
         mAPI.getLongComments(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LongComments>() {
                     @Override
                     public void onCompleted() {
@@ -172,6 +181,7 @@ public class RestNewsData implements NewsData {
     public void getShortComments(String id) {
         mAPI.getShortComments(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ShortComments>() {
                     @Override
                     public void onCompleted() {
@@ -194,6 +204,7 @@ public class RestNewsData implements NewsData {
     public void getThemes() {
         mAPI.getThemes()
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Themes>() {
                     @Override
                     public void onCompleted() {
@@ -216,6 +227,7 @@ public class RestNewsData implements NewsData {
     public void getDetailTheme(String id) {
         mAPI.getDetailTheme(id)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<DetailTheme>() {
                     @Override
                     public void onCompleted() {
