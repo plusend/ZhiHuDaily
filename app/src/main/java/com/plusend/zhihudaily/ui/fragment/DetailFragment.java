@@ -3,6 +3,7 @@ package com.plusend.zhihudaily.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,13 +77,21 @@ public class DetailFragment extends Fragment implements DetailNewsView {
         updateUI();
     }
 
-    private void updateUI(){
+    private void updateUI() {
         Picasso.with(getContext()).load(mDetailNews.getImages().get(0)).into(image);
         title.setText(mDetailNews.getTitle());
         from.setText(mDetailNews.getImageSource());
-        String css = "<link rel=\"stylesheet\" href=\"http://news-at.zhihu.com/css/news_qa.auto.css?v=4b3e3\" type=\"text/css\">";
-        String html = "<html><head>" + css + "</head><body>" + mDetailNews.getBody() + "</body></html>";
-        html = html.replace("<div class=\"img-place-holder\">", "");
+
+        String cssFormat = "<link rel=\"stylesheet\" href=\"%s\" type=\"text/css\">";
+        String css = String.format(cssFormat, mDetailNews.getCss().get(0));
+        int currentNightMode = AppCompatDelegate.getDefaultNightMode();
+        String html;
+        if (currentNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            html = "<html><head>" + css + "</head><body>" + "<div class=\"night\">" + mDetailNews.getBody() + "</div>" + "</body></html>";
+        } else {
+            html = "<html><head>" + css + "</head><body>" + mDetailNews.getBody() + "</body></html>";
+        }
+        html = html.replace("<div class=\"img-place-holder\"></div>", "");
         mWebView.loadDataWithBaseURL("x-data://base", html, "text/html", "UTF-8", null);
     }
 }

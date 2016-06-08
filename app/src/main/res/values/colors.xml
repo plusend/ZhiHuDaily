@@ -3,4 +3,14 @@
     <color name="colorPrimary">#00a0f0</color>
     <color name="colorPrimaryDark">#0c74d5</color>
     <color name="colorAccent">#009788</color>
+
+    <color name="colorNavigationViewBackGround">#00a0f0</color>
+
+    <color name="colorRecyclerViewBackGround">#F3F3F3</color>
+    <color name="colorRecyclerViewItemBackGround">#FAFAFA</color>
+    <color name="colorRecyclerViewItemTextColor">#000000</color>
+    <color name="colorRecyclerViewItemDateColor">#6F6F6F</color>
+
+    <color name="colorWebView">#F9F9F9</color>
+
 </resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">知乎曰报</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">设置选项</string>
+    <string name="action_night"> 夜间模式</string>
+    <string name="activity_setting_label">设置</string>
+    <string name="action_day">日间模式</string>
+</resources>

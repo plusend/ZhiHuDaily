@@ -21,6 +21,8 @@ public class DetailNews {
     private String shareUrl;
     @SerializedName("ga_prefix")
     private String gaPrefix;
+    @SerializedName("section")
+    private Section section;
     @SerializedName("type")
     private int type;
     @SerializedName("id")
@@ -80,6 +82,14 @@ public class DetailNews {
         this.gaPrefix = gaPrefix;
     }
 
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
     public int getType() {
         return type;
     }
@@ -118,5 +128,38 @@ public class DetailNews {
 
     public void setCss(List<String> css) {
         this.css = css;
+    }
+
+    public static class Section {
+        @SerializedName("thumbnail")
+        private String thumbnail;
+        @SerializedName("id")
+        private int id;
+        @SerializedName("name")
+        private String name;
+
+        public String getThumbnail() {
+            return thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

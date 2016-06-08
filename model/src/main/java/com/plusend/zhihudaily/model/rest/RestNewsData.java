@@ -1,7 +1,5 @@
 package com.plusend.zhihudaily.model.rest;
 
-import android.util.Log;
-
 import com.plusend.zhihudaily.common.Constants;
 import com.plusend.zhihudaily.common.RxBus;
 import com.plusend.zhihudaily.model.NewsData;
@@ -124,7 +122,6 @@ public class RestNewsData implements NewsData {
 
                     @Override
                     public void onNext(BeforeNews beforeNews) {
-                        Log.d(TAG, "getBeforeNews: " + beforeNews.getDate());
                         beforeNews.getStories().get(0).setType(Integer.valueOf(beforeNews.getDate()));
                         RxBus.getInstance().send(beforeNews);
                     }

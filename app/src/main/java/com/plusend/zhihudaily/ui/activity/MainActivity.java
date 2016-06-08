@@ -10,17 +10,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.plusend.zhihudaily.R;
+import com.plusend.zhihudaily.common.Constants;
 import com.plusend.zhihudaily.model.bean.BeforeNews;
 import com.plusend.zhihudaily.model.bean.LatestNews;
 import com.plusend.zhihudaily.model.bean.Story;
@@ -31,6 +32,8 @@ import com.plusend.zhihudaily.mvp.view.LatestNewsView;
 import com.plusend.zhihudaily.ui.adapter.BannerAdapter;
 import com.plusend.zhihudaily.ui.adapter.StoryAdapter;
 import com.plusend.zhihudaily.ui.view.RecyclerViewHeader;
+import com.plusend.zhihudaily.utils.PreferenceUtil;
+import com.plusend.zhihudaily.utils.ThemeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,15 +70,20 @@ public class MainActivity extends AppCompatActivity
     private List<Story> mStoriesList = new ArrayList<>();
     StoryAdapter mStoryAdapter;
 
+    private int night_mode = AppCompatDelegate.MODE_NIGHT_NO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        night_mode = PreferenceUtil.getInt(MainActivity.this, Constants.NIGHT_MODE,
+                AppCompatDelegate.MODE_NIGHT_NO);
+
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -122,11 +130,16 @@ public class MainActivity extends AppCompatActivity
                         .findLastVisibleItemPosition();
                 if ((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
                         (lastVisibleItemPosition) >= totalItemCount - 1)) {
-                    Log.d(TAG, "loadMore: " + mBeforeDate);
                     if (!isLoading) {
                         isLoading = true;
                         mBeforePresenter.getBeforeNews(mBeforeDate);
                     }
+                }
+
+                int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                if (mStoriesList.get(firstVisibleItemPosition).getType() != 0) {
+//                    if (toolbar != null)
+//                        toolbar.setTitle(mStoriesList.get(firstVisibleItemPosition).getType());
                 }
             }
         });
@@ -217,7 +230,14 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
             return true;
+        } else if (id == R.id.action_night) {
+            night_mode = night_mode == AppCompatDelegate.MODE_NIGHT_NO ? AppCompatDelegate.MODE_NIGHT_YES
+                    : AppCompatDelegate.MODE_NIGHT_NO;
+            PreferenceUtil.putInt(MainActivity.this, Constants.NIGHT_MODE, night_mode);
+            ThemeUtil.setTheme(MainActivity.this, night_mode);
+            recreate();
         }
 
         return super.onOptionsItemSelected(item);
@@ -262,7 +282,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showNews(LatestNews news) {
         mBeforeDate = news.getDate();
-        Log.d(TAG, "showNews: " + mBeforeDate);
         mStoriesList.clear();
         mStoriesList.addAll(news.getStories());
         mStoryAdapter.notifyDataSetChanged();
@@ -292,15 +311,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void addBefore(BeforeNews news) {
         mBeforeDate = news.getDate();
-        Log.d(TAG, "addBefore: " + mBeforeDate);
         mStoriesList.addAll(news.getStories());
         mStoryAdapter.notifyDataSetChanged();
         isLoading = false;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        return mViewPager.onTouchEvent(event);
-    }
 }
