@@ -7,5 +7,8 @@
     <string name="action_settings">设置选项</string>
     <string name="action_night"> 夜间模式</string>
     <string name="activity_setting_label">设置</string>
-    <string name="action_day">日间模式</string>
+    <string name="action_collect">收藏</string>
+    <string name="action_comment">评论</string>
+    <string name="action_share">分享</string>
+    <string name="action_praise">赞</string>
 </resources>

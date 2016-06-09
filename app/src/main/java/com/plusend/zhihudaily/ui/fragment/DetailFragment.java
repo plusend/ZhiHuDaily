@@ -33,13 +33,11 @@ public class DetailFragment extends Fragment implements DetailNewsView {
     TextView title;
     @BindView(R.id.from)
     TextView from;
-    @BindView(R.id.webview)
+    @BindView(R.id.web_view)
     WebView mWebView;
 
     private int id;
     private DetailNews mDetailNews;
-
-    private DetailNewsPresenter mDetailNewsPresenter;
 
     public static DetailFragment newInstance(int id) {
         DetailFragment fragment = new DetailFragment();
@@ -53,8 +51,8 @@ public class DetailFragment extends Fragment implements DetailNewsView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         id = getArguments().getInt("id");
-        mDetailNewsPresenter = new DetailNewsPresenter(this, id);
-        mDetailNewsPresenter.start();
+        DetailNewsPresenter detailNewsPresenter = new DetailNewsPresenter(this, id);
+        detailNewsPresenter.start();
     }
 
     @Nullable

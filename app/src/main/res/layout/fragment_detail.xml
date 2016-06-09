@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +13,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="230dp">
+            android:layout_height="200dp">
 
             <ImageView
                 android:id="@+id/large_image"
@@ -50,9 +51,9 @@
         </FrameLayout>
 
         <WebView
-            android:id="@+id/webview"
+            android:id="@+id/web_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWebView"/>
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 </ScrollView>
