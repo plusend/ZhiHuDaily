@@ -76,7 +76,7 @@ public class DetailFragment extends Fragment implements DetailNewsView {
     }
 
     private void updateUI() {
-        Picasso.with(getContext()).load(mDetailNews.getImages().get(0)).into(image);
+        Picasso.with(getContext()).load(mDetailNews.getImage()).into(image);
         title.setText(mDetailNews.getTitle());
         from.setText(mDetailNews.getImageSource());
 

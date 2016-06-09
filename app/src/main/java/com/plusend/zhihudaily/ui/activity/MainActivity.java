@@ -15,8 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity
 
                 int firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
                 if (mStoriesList.get(firstVisibleItemPosition).getType() != 0) {
+                    Log.d(TAG, "date:" + mStoriesList.get(firstVisibleItemPosition).getType());
 //                    if (toolbar != null)
 //                        toolbar.setTitle(mStoriesList.get(firstVisibleItemPosition).getType());
                 }
@@ -169,10 +172,10 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        mViewPager.setOnClickListener(new View.OnClickListener() {
+
+        final GestureDetector tapGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public void onClick(View v) {
-                Log.d(TAG, "banner onClick");
+            public boolean onSingleTapConfirmed(MotionEvent e) {
                 ArrayList<Integer> mIds = new ArrayList<>();
                 int size = mTopStories.size();
                 for (int i = 0; i < size; ++i) {
@@ -183,6 +186,14 @@ public class MainActivity extends AppCompatActivity
                 intent.putIntegerArrayListExtra("id", mIds);
                 intent.putExtra("current", mViewPager.getCurrentItem());
                 startActivity(intent);
+                return false;
+            }
+        });
+
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return false;
             }
         });
         setSwipeRefreshLayoutListener();
