@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.plusend.zhihudaily.model.bean.LatestNews;
+import com.plusend.zhihudaily.model.bean.TopStories;
 import com.plusend.zhihudaily.ui.fragment.BannerFragment;
 
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class BannerAdapter extends FragmentPagerAdapter {
 
-    private List<LatestNews.TopStories> mTopStories;
+    private List<TopStories> mTopStories;
 
-    public BannerAdapter(FragmentManager fm, List<LatestNews.TopStories> topStories) {
+    public BannerAdapter(FragmentManager fm, List<TopStories> topStories) {
         super(fm);
         mTopStories = topStories;
     }

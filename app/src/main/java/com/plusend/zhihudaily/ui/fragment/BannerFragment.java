@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plusend.zhihudaily.R;
-import com.plusend.zhihudaily.model.bean.LatestNews;
+import com.plusend.zhihudaily.model.bean.TopStories;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -26,12 +26,12 @@ public class BannerFragment extends Fragment {
     @BindView(R.id.title)
     TextView title;
 
-    private LatestNews.TopStories mTopStories;
+    private TopStories mTopStories;
 
-    public static BannerFragment newInstance(LatestNews.TopStories topStory) {
+    public static BannerFragment newInstance(TopStories topStory) {
         BannerFragment fragment = new BannerFragment();
         Bundle args = new Bundle();
-        args.putParcelable("story", topStory);
+        args.putSerializable("story", topStory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,7 +39,7 @@ public class BannerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTopStories = getArguments().getParcelable("story");
+        mTopStories = (TopStories) getArguments().getSerializable("story");
     }
 
     @Nullable

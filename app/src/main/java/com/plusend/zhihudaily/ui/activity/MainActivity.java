@@ -27,6 +27,7 @@ import com.plusend.zhihudaily.common.Constants;
 import com.plusend.zhihudaily.model.bean.BeforeNews;
 import com.plusend.zhihudaily.model.bean.LatestNews;
 import com.plusend.zhihudaily.model.bean.Story;
+import com.plusend.zhihudaily.model.bean.TopStories;
 import com.plusend.zhihudaily.mvp.presenter.BeforeNewsPresenter;
 import com.plusend.zhihudaily.mvp.presenter.LatestNewsPresenter;
 import com.plusend.zhihudaily.mvp.presenter.Presenter;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
     LinearLayout indicator;
 
     private BannerAdapter mBannerAdapter;
-    private List<LatestNews.TopStories> mTopStories = new ArrayList<>();
+    private List<TopStories> mTopStories = new ArrayList<>();
 
     private Presenter mPresenter;
     private BeforeNewsPresenter mBeforePresenter;
@@ -91,12 +92,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        if (drawer != null) {
+            drawer.addDrawerListener(toggle);
+        }
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+        if(navigationView != null){
+            navigationView.setNavigationItemSelectedListener(this);
+        }
 
         mPresenter = new LatestNewsPresenter(this);
         mBeforePresenter = new BeforeNewsPresenter(this);
@@ -179,7 +183,7 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Integer> mIds = new ArrayList<>();
                 int size = mTopStories.size();
                 for (int i = 0; i < size; ++i) {
-                    LatestNews.TopStories story = mTopStories.get(i);
+                    TopStories story = mTopStories.get(i);
                     mIds.add(story.getId());
                 }
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
@@ -218,7 +222,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -275,7 +279,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if(drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
