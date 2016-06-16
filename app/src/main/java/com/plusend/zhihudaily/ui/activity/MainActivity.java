@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if(navigationView != null){
+        if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
 
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if(drawer != null) {
+        if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
         }
         return true;
@@ -298,6 +298,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showNews(LatestNews news) {
+        if (news == null)
+            return;
         mBeforeDate = news.getDate();
         mStoriesList.clear();
         mStoriesList.addAll(news.getStories());

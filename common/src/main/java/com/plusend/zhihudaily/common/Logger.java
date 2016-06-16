@@ -1,4 +1,4 @@
-package com.plusend.zhihudaily.utils;
+package com.plusend.zhihudaily.common;
 
 import android.util.Log;
 
