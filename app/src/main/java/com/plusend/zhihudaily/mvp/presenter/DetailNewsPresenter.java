@@ -1,8 +1,12 @@
 package com.plusend.zhihudaily.mvp.presenter;
 
+import android.content.Context;
+
+import com.plusend.zhihudaily.common.NetworkUtil;
 import com.plusend.zhihudaily.common.RxBus;
 import com.plusend.zhihudaily.model.NewsData;
 import com.plusend.zhihudaily.model.bean.DetailNews;
+import com.plusend.zhihudaily.model.db.SQLiteNewsData;
 import com.plusend.zhihudaily.model.rest.RestNewsData;
 import com.plusend.zhihudaily.mvp.view.DetailNewsView;
 
@@ -18,7 +22,12 @@ public class DetailNewsPresenter extends Presenter {
 
     public DetailNewsPresenter(DetailNewsView detailNewsView, int id) {
         mDetailNewsView = detailNewsView;
-        mNewsData = new RestNewsData();
+        Context context = mDetailNewsView.getContext();
+        if (NetworkUtil.isOnline(context)) {
+            mNewsData = new RestNewsData(context);
+        } else {
+            mNewsData = new SQLiteNewsData(context);
+        }
         mId = id;
     }
 

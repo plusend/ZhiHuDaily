@@ -1,5 +1,10 @@
 package com.plusend.zhihudaily.model.rest;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.google.gson.Gson;
 import com.plusend.zhihudaily.common.Constants;
 import com.plusend.zhihudaily.common.RxBus;
 import com.plusend.zhihudaily.model.NewsData;
@@ -12,6 +17,8 @@ import com.plusend.zhihudaily.model.bean.ShortComments;
 import com.plusend.zhihudaily.model.bean.StartImage;
 import com.plusend.zhihudaily.model.bean.StoryExtra;
 import com.plusend.zhihudaily.model.bean.Themes;
+import com.plusend.zhihudaily.model.db.DatabaseHelper;
+import com.plusend.zhihudaily.model.db.NewsContract;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -34,6 +41,12 @@ public class RestNewsData implements NewsData {
 
     private API mAPI = retrofit.create(API.class);
 
+    private Context mContext;
+
+    public RestNewsData(Context context) {
+        mContext = context;
+    }
+
     @Override
     public void getLatestNews() {
         mAPI.getLatestNews()
@@ -52,8 +65,16 @@ public class RestNewsData implements NewsData {
 
                     @Override
                     public void onNext(LatestNews latestNews) {
-                        latestNews.getStories().get(0).setType(Integer.valueOf(latestNews.getDate()));
+                        latestNews.getStories().get(0).setType(
+                                Integer.valueOf(latestNews.getDate()));
                         RxBus.getInstance().send(latestNews);
+
+                        DatabaseHelper databaseHelper = new DatabaseHelper(mContext);
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+                        ContentValues values = new ContentValues();
+                        values.put(NewsContract.LatestNews.COLUMN_NAME_JSON, new Gson().toJson(latestNews));
+                        long newRowId = db.insert(NewsContract.LatestNews.TABLE_NAME, null, values);
                     }
                 });
     }
@@ -82,7 +103,7 @@ public class RestNewsData implements NewsData {
     }
 
     @Override
-    public void getDetailNews(int id) {
+    public void getDetailNews(final int id) {
         mAPI.getDetailNews(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -94,18 +115,26 @@ public class RestNewsData implements NewsData {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(DetailNews detailNews) {
                         RxBus.getInstance().send(detailNews);
+
+                        DatabaseHelper databaseHelper = new DatabaseHelper(mContext);
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+                        ContentValues values = new ContentValues();
+                        values.put(NewsContract.DetailNews.COLUMN_NAME_ID, id);
+                        values.put(NewsContract.DetailNews.COLUMN_NAME_JSON, new Gson().toJson(detailNews));
+                        long newRowId = db.insert(NewsContract.DetailNews.TABLE_NAME, null, values);
                     }
                 });
     }
 
     @Override
-    public void getBeforeNews(String date) {
+    public void getBeforeNews(final String date) {
         mAPI.getBeforeNews(date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,8 +151,17 @@ public class RestNewsData implements NewsData {
 
                     @Override
                     public void onNext(BeforeNews beforeNews) {
-                        beforeNews.getStories().get(0).setType(Integer.valueOf(beforeNews.getDate()));
+                        beforeNews.getStories().get(0).setType(
+                                Integer.valueOf(beforeNews.getDate()));
                         RxBus.getInstance().send(beforeNews);
+
+                        DatabaseHelper databaseHelper = new DatabaseHelper(mContext);
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+                        ContentValues values = new ContentValues();
+                        values.put(NewsContract.BeforeNews.COLUMN_NAME_DATE, date);
+                        values.put(NewsContract.BeforeNews.COLUMN_NAME_JSON, new Gson().toJson(beforeNews));
+                        long newRowId = db.insert(NewsContract.BeforeNews.TABLE_NAME, null, values);
                     }
                 });
     }

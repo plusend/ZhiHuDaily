@@ -1,9 +1,12 @@
 package com.plusend.zhihudaily.mvp.presenter;
 
+import android.content.Context;
+
 import com.plusend.zhihudaily.common.NetworkUtil;
 import com.plusend.zhihudaily.common.RxBus;
 import com.plusend.zhihudaily.model.NewsData;
 import com.plusend.zhihudaily.model.bean.LatestNews;
+import com.plusend.zhihudaily.model.db.SQLiteNewsData;
 import com.plusend.zhihudaily.model.rest.RestNewsData;
 import com.plusend.zhihudaily.mvp.view.LatestNewsView;
 
@@ -19,11 +22,11 @@ public class LatestNewsPresenter extends Presenter {
 
     public LatestNewsPresenter(LatestNewsView latestNewsView) {
         mLatestNewsView = latestNewsView;
-
-        if(NetworkUtil.isOnline(mLatestNewsView.getContext())){
-            mNewsData = new RestNewsData();
-        }else {
-//            mNewsData = new SQLiteNewsData();
+        Context context = mLatestNewsView.getContext();
+        if (NetworkUtil.isOnline(context)) {
+            mNewsData = new RestNewsData(context);
+        } else {
+            mNewsData = new SQLiteNewsData(context);
         }
 
         RxBus.getInstance().toObserverable().subscribe(new Action1<Object>() {

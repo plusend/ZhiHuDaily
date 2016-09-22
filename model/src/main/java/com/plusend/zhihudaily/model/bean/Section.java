@@ -36,4 +36,13 @@ public class Section {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Section{" +
+                "thumbnail='" + thumbnail + '\'' +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

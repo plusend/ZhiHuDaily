@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plusend.zhihudaily.R;
+import com.plusend.zhihudaily.common.Logger;
 import com.plusend.zhihudaily.model.bean.DetailNews;
 import com.plusend.zhihudaily.mvp.presenter.DetailNewsPresenter;
 import com.plusend.zhihudaily.mvp.view.DetailNewsView;
@@ -68,6 +69,7 @@ public class DetailFragment extends Fragment implements DetailNewsView {
 
     @Override
     public void showDetail(DetailNews detailNews) {
+        Logger.d(TAG, "id: " + id + " showDetail: " + detailNews.getId());
         if (detailNews.getId() != id) {
             return;
         }

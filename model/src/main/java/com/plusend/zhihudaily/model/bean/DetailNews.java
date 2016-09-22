@@ -130,4 +130,21 @@ public class DetailNews {
         this.css = css;
     }
 
+    @Override
+    public String toString() {
+        return "DetailNews{" +
+                "body='" + body + '\'' +
+                ", imageSource='" + imageSource + '\'' +
+                ", title='" + title + '\'' +
+                ", image='" + image + '\'' +
+                ", shareUrl='" + shareUrl + '\'' +
+                ", gaPrefix='" + gaPrefix + '\'' +
+                ", section=" + section +
+                ", type=" + type +
+                ", id=" + id +
+                ", js=" + js +
+                ", images=" + images +
+                ", css=" + css +
+                '}';
+    }
 }
